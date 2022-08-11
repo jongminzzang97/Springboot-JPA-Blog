@@ -15,6 +15,8 @@ import javax.persistence.OneToMany;
 
 import org.hibernate.annotations.CreationTimestamp;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -35,7 +37,7 @@ public class Reply {
 	private String content;
 	
 	@ManyToOne
-	@JoinColumn(name="bordId")
+	@JoinColumn(name="boardId")
 	private Board board;
 	
 	@ManyToOne(fetch = FetchType.EAGER)  // 그냥 가져오자. 왜? -> 하나밖에 없으니까 간단함

@@ -10,9 +10,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
-import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.DynamicInsert;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -31,7 +29,7 @@ public class User {
 	@GeneratedValue(strategy = GenerationType.IDENTITY) //프로젝트에서 연결된 DB의 넘버링 전략을 따라간다.
 	private int id; // 시퀀스, auto_increment
 	
-	@Column(nullable = false, length=30, unique=true)
+	@Column(nullable = false, length=100, unique=true)
 	private String username;
 
 	@Column(nullable = false, length=100) //추후에 해쉬로 암호화 할수있기 때문에..
@@ -43,6 +41,8 @@ public class User {
 	// @ColumnDefault("USER")
 	@Enumerated(EnumType.STRING) //DB는 RoleType이 없으므로 RoleType이 String임을 알려줌
 	private RoleType role; // 스트링이면 userrrr 가 가능
+	
+	private String oauth; // kakao, google ...
 	
 	@CreationTimestamp // 시간이 자동으로 기록됨
 	private Timestamp createDate;
