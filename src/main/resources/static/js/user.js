@@ -26,10 +26,13 @@ let index = {
 			contentType: "application/json; charset=utf-8", // body 데이터가 어떤 타입인지(MIME)
 			dataType: "json" // 요청에 대한 응답 -> 기본적으로 스트링 (생긴게 json이라면)-> javascript object로 바꿔줌
 		}).done(function(resp){
-			// 성공했을 시
-			alert("회원가입이 완료되었습니다.");
-			console.log(resp);
-			location.href = "/";
+			if(resp.status == 500){
+				alert("아이디가 중복된 회원이 존재합니다.")
+			}else{
+				alert("회원가입이 완료되었습니다.");
+				location.href = "/";
+			}
+			
 		}).fail(function(error){
 			// 실패했을 시
 			alert(JSON.stringify(error));

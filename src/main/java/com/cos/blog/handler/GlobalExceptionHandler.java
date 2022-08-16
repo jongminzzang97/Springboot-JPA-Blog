@@ -11,7 +11,6 @@ import com.cos.blog.dto.ResponseDto;
 @RestController
 public class GlobalExceptionHandler {
 	
-
 	@ExceptionHandler(value=Exception.class)
 	public ResponseDto<String> handlerArgumentExceptrion(Exception e) {
 		return new ResponseDto<String>(HttpStatus.INTERNAL_SERVER_ERROR.value(), e.getMessage());

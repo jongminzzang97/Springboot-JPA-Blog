@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.cos.blog.config.auth.PrincipalDetail;
+import com.cos.blog.dto.ReplySaveRequesetDto;
 import com.cos.blog.dto.ResponseDto;
 import com.cos.blog.model.Board;
 import com.cos.blog.model.Reply;
@@ -46,12 +47,24 @@ public class BoardApiController {
 		return new ResponseDto<Integer>(HttpStatus.OK.value(), 1);
 	}
 	
+	
+	// 데이터를 받을 때 컨트롤러에서 dto를 만들어서 받는게 좋다.
+	// dto를 사용하지 않은 이유는!! 작은 프로젝트이기 때문이지만...
+//	@PostMapping("/api/board/{boardId}/reply")
+//	public ResponseDto<Integer> replySave(@PathVariable int boardId, @RequestBody Reply reply, @AuthenticationPrincipal PrincipalDetail principal) {
+//		boardService.댓글쓰기(principal.getUser(), boardId, reply);
+//		return new ResponseDto<Integer>(HttpStatus.OK.value(), 1);
+//	}
+	
 	@PostMapping("/api/board/{boardId}/reply")
-	public ResponseDto<Integer> replySave(@PathVariable int boardId, @RequestBody Reply reply, @AuthenticationPrincipal PrincipalDetail principal) {
-		
-		boardService.댓글쓰기(principal.getUser(), boardId, reply);
-		
+	public ResponseDto<Integer> replySave2(@RequestBody ReplySaveRequesetDto replySaveRequesetDto) {
+		boardService.댓글쓰기_네이티브쿼리(replySaveRequesetDto);
 		return new ResponseDto<Integer>(HttpStatus.OK.value(), 1);
 	}
 	
+	@DeleteMapping("/api/board/{boardId}/reply/{replyId}")
+	public ResponseDto<Integer> replyDelete(@PathVariable int replyId){
+		boardService.댓글삭제(replyId);
+		return new ResponseDto<Integer>(HttpStatus.OK.value(), 1);
+	}
 }

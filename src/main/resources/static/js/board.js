@@ -12,6 +12,7 @@ let index = {
 		$("#btn-reply-save").on("click", () => {
 			this.replySave();
 		});
+		
 	},
 
 	save: function() {
@@ -87,16 +88,15 @@ let index = {
 	
 	replySave: function() {
 		let data = {
+			userId: $("#userId").val(),
+			boardId: $("#boardId").val(),
 			content: $("#reply-content").val(),
 		};
-		let boardId = $("#boardId").val();
-		let urll= `/api/board/${boardId}/reply`;
-		console.log(urll);
 		// ajax호출 시 default가 비동기 호출
 		$.ajax({
 			// 회원가입 수행요청
 			type: "POST",
-			url: `/api/board/${boardId}/reply`,
+			url: `/api/board/${data.boardId}/reply`,
 			data: JSON.stringify(data),
 			contentType: "application/json; charset=utf-8",
 			dataType: "json"
@@ -104,6 +104,22 @@ let index = {
 			// 성공했을 시
 			alert("댓글작성 완료되었습니다.");
 			console.log(resp);
+			location.href = `/board/${data.boardId}`;
+		}).fail(function(error) {
+			// 실패했을 시
+			alert(JSON.stringify(error));
+		});
+	},
+	replyDelete: function(boardId, replyId) {
+		// ajax호출 시 default가 비동기 호출
+		$.ajax({
+			// 회원가입 수행요청
+			type: "DELETE",
+			url: `/api/board/${boardId}/reply/${replyId}`,
+			dataType: "json"
+		}).done(function(resp) {
+			// 성공했을 시
+			alert("댓글삭제 완료되었습니다.");
 			location.href = `/board/${boardId}`;
 		}).fail(function(error) {
 			// 실패했을 시

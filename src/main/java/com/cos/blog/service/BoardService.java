@@ -9,6 +9,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.cos.blog.dto.ReplySaveRequesetDto;
 import com.cos.blog.model.Board;
 import com.cos.blog.model.Reply;
 import com.cos.blog.model.RoleType;
@@ -28,7 +29,9 @@ public class BoardService {
 
 	@Autowired
 	private ReplyRepository replyRepository;
-
+	
+	@Autowired
+	private UserRepository userRepository;
 	
 	@Transactional 
 	public void 글쓰기(Board board, User user) {
@@ -70,7 +73,25 @@ public class BoardService {
 	}
 	
 	@Transactional
-	public void 댓글쓰기(User user, int boardId, Reply requestReply) {
+	public void 댓글쓰기(ReplySaveRequesetDto replySaveRequesetDto) {
+		
+		User user = userRepository.findById(replySaveRequesetDto.getUserId())
+				.orElseThrow(()->{
+					return new IllegalArgumentException("댓글 쓰기 실패 : 유저 id를 찾을 수 없습니다.");
+				});
+		Board board = boardRepository.findById(replySaveRequesetDto.getBoardId())
+				.orElseThrow(()->{
+					return new IllegalArgumentException("댓글 쓰기 실패 : 게시글 id를 찾을 수 없습니다.");
+				});
+		
+		Reply reply = new Reply();
+		reply.update(user, board, replySaveRequesetDto.getContent());
+		
+		replyRepository.save(reply);
+	}
+	
+	@Transactional
+	public void 댓글쓰기_Dto없이(User user, int boardId, Reply requestReply) {
 		Board board = boardRepository.findById(boardId)
 				.orElseThrow(()->{
 					return new IllegalArgumentException("댓글 쓰기 실패 : 게시글 id를 찾을 수 없습니다.");
@@ -81,4 +102,16 @@ public class BoardService {
 		
 		replyRepository.save(requestReply);
 	}
+	
+	@Transactional
+	public void 댓글쓰기_네이티브쿼리(ReplySaveRequesetDto replySaveRequesetDto) {
+		replyRepository.mSave(replySaveRequesetDto.getUserId(), replySaveRequesetDto.getBoardId(), replySaveRequesetDto.getContent());
+	}
+	
+	@Transactional
+	public void 댓글삭제(int replyId) {
+		System.out.println("댓글삭제실행");
+		replyRepository.deleteById(replyId);
+	}
+	
 }
